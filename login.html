@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f4f2ec">
+    <title>Sign in | The Reading Room</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --paper: #f4f2ec;
+            --white: #fffefa;
+            --ink: #202a24;
+            --muted: #6d756f;
+            --green: #365d4b;
+            --green-dark: #294738;
+            --line: #d9ddd6;
+            --accent: #d6a861;
+            --serif: Georgia, "Times New Roman", serif;
+            --sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            min-height: 100vh;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--sans);
+        }
+
+        button, input { font: inherit; }
+
+        .page {
+            display: grid;
+            min-height: 100vh;
+            grid-template-columns: minmax(0, 1.06fr) minmax(440px, .94fr);
+        }
+
+        .visual {
+            position: relative;
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 38px clamp(30px, 5vw, 76px) 34px;
+            background: #354a3d url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=85") center / cover no-repeat;
+            color: #fffefa;
+            isolation: isolate;
+        }
+
+        .visual::before {
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            background: linear-gradient(180deg, rgb(16 27 20 / 43%) 0%, rgb(16 27 20 / 8%) 43%, rgb(16 27 20 / 72%) 100%);
+            content: "";
+        }
+
+        .brand {
+            display: inline-flex;
+            width: fit-content;
+            align-items: center;
+            gap: 12px;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            border: 1px solid rgb(255 255 255 / 65%);
+            font-family: var(--serif);
+            font-size: 23px;
+            line-height: 1;
+        }
+
+        .brand-name {
+            font-family: var(--serif);
+            font-size: 19px;
+            letter-spacing: .02em;
+        }
+
+        .visual-copy {
+            max-width: 560px;
+            padding: 50px 0 34px;
+            animation: rise-in .7s ease-out both;
+        }
+
+        .eyebrow {
+            margin: 0 0 17px;
+            color: #e7c58e;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        .visual h1 {
+            max-width: 530px;
+            margin: 0;
+            font-family: var(--serif);
+            font-size: clamp(42px, 5.25vw, 76px);
+            font-weight: 400;
+            line-height: 1.02;
+        }
+
+        .visual-copy > p:last-child {
+            max-width: 370px;
+            margin: 22px 0 0;
+            color: rgb(255 254 250 / 82%);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .visual-footer {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: rgb(255 254 250 / 78%);
+            font-size: 12px;
+        }
+
+        .footer-rule {
+            width: 28px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .form-side {
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 48px clamp(28px, 6vw, 90px);
+        }
+
+        .form-wrap {
+            width: min(100%, 398px);
+            animation: rise-in .7s .08s ease-out both;
+        }
+
+        .mobile-brand { display: none; }
+
+        .form-kicker {
+            margin: 0 0 12px;
+            color: var(--green);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            margin: 0;
+            font-family: var(--serif);
+            font-size: 42px;
+            font-weight: 400;
+            line-height: 1.12;
+        }
+
+        .intro {
+            margin: 12px 0 34px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .field { margin-bottom: 21px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 650;
+        }
+
+        input[type="email"], input[type="password"], input[type="text"] {
+            width: 100%;
+            height: 49px;
+            padding: 0 14px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            outline: none;
+            background: var(--white);
+            color: var(--ink);
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+
+        input::placeholder { color: #9ba19b; }
+
+        input:focus-visible {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgb(54 93 75 / 14%);
+        }
+
+        .password-control {
+            position: relative;
+        }
+
+        .password-control input { padding-right: 65px; }
+
+        .toggle-password {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 49px;
+            padding: 0 13px;
+            border: 0;
+            background: transparent;
+            color: var(--green);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .toggle-password:focus-visible, a:focus-visible, button:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 3px;
+        }
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 2px 0 26px;
+            font-size: 12px;
+        }
+
+        .remember {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #4f5852;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .remember input {
+            width: 15px;
+            height: 15px;
+            margin: 0;
+            accent-color: var(--green);
+        }
+
+        a { color: var(--green); }
+
+        .forgot {
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        .forgot:hover, .signup a:hover { text-decoration: underline; }
+
+        .submit-button {
+            display: flex;
+            width: 100%;
+            min-height: 50px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--green);
+            border-radius: 2px;
+            background: var(--green);
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            border-color: var(--green-dark);
+            background: var(--green-dark);
+        }
+
+        .form-message {
+            min-height: 21px;
+            margin: 12px 0 0;
+            color: #9b4b37;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin: 26px 0 20px;
+            color: #8a918b;
+            font-size: 11px;
+        }
+
+        .divider::before, .divider::after {
+            height: 1px;
+            flex: 1;
+            background: var(--line);
+            content: "";
+        }
+
+        .signup {
+            margin: 0;
+            color: #68716b;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .signup a { font-weight: 700; text-decoration: none; }
+
+        @keyframes rise-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 860px) {
+            .page { grid-template-columns: minmax(0, .9fr) minmax(390px, 1.1fr); }
+            .visual { padding-inline: 32px; }
+            .form-side { padding-inline: 38px; }
+            .visual h1 { font-size: clamp(40px, 6vw, 58px); }
+        }
+
+        @media (max-width: 680px) {
+            .page { display: block; }
+            .visual {
+                min-height: 230px;
+                padding: 22px 25px;
+                background-position: center 42%;
+            }
+            .brand-mark { width: 36px; height: 36px; font-size: 20px; }
+            .brand-name { font-size: 17px; }
+            .visual-copy { padding: 36px 0 6px; }
+            .visual-copy .eyebrow { margin-bottom: 9px; font-size: 10px; }
+            .visual h1 { max-width: 410px; font-size: clamp(34px, 9vw, 48px); }
+            .visual-copy > p:last-child, .visual-footer { display: none; }
+            .form-side { min-height: auto; padding: 36px 25px 46px; }
+            .form-wrap { max-width: 420px; }
+            .mobile-brand { display: none; }
+            h2 { font-size: 38px; }
+            .intro { margin-bottom: 28px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="visual" aria-label="The Reading Room library">
+            <a class="brand" href="#" aria-label="The Reading Room home">
+                <span class="brand-mark" aria-hidden="true">R</span>
+                <span class="brand-name">The Reading Room</span>
+            </a>
+
+            <div class="visual-copy">
+                <p class="eyebrow">A library for curious minds</p>
+                <h1>Find your next favorite story.</h1>
+                <p>Your books, reading lists, and library discoveries, all in one thoughtful place.</p>
+            </div>
+
+            <div class="visual-footer"><span class="footer-rule" aria-hidden="true"></span>Open a book. Find a world.</div>
+        </section>
+
+        <section class="form-side" aria-labelledby="signin-title">
+            <div class="form-wrap">
+                <p class="form-kicker">Member access</p>
+                <h2 id="signin-title">Welcome back.</h2>
+                <p class="intro">Sign in to continue to your library account.</p>
+
+                <form id="login-form">
+                    <div class="field">
+                        <label for="email">Email address</label>
+                        <input id="email" name="email" type="email" autocomplete="username" placeholder="you@example.com" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <div class="password-control">
+                            <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+                            <button class="toggle-password" id="toggle-password" type="button" aria-controls="password" aria-pressed="false">Show</button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember" for="remember">
+                            <input id="remember" name="remember" type="checkbox">
+                            Remember me
+                        </label>
+                        <a class="forgot" id="forgot-link" href="#">Forgot password?</a>
+                    </div>
+
+                    <button class="submit-button" type="submit">Sign in</button>
+                    <p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+                </form>
+
+                <div class="divider" aria-hidden="true">NEW TO THE LIBRARY?</div>
+                <p class="signup">Ask your librarian to create a member account.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const passwordInput = document.querySelector("#password");
+        const togglePassword = document.querySelector("#toggle-password");
+        const form = document.querySelector("#login-form");
+        const formMessage = document.querySelector("#form-message");
+
+        togglePassword.addEventListener("click", () => {
+            const isVisible = passwordInput.type === "text";
+            passwordInput.type = isVisible ? "password" : "text";
+            togglePassword.textContent = isVisible ? "Show" : "Hide";
+            togglePassword.setAttribute("aria-pressed", String(!isVisible));
+        });
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            formMessage.textContent = "Sign-in is not connected yet. Please contact your librarian for access.";
+        });
+
+        document.querySelector("#forgot-link").addEventListener("click", (event) => {
+            event.preventDefault();
+            formMessage.textContent = "For password help, please contact your librarian.";
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System - Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+
+        .login-container {
+            width: 380px;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #777;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #1e3c72;
+            box-shadow: 0 0 5px rgba(30, 60, 114, 0.3);
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .remember input {
+            width: auto;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 13px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-btn:hover {
+            background: #162d55;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 18px;
+        }
+
+        .forgot-password a {
+            color: #1e3c72;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #888;
+            font-size: 12px;
+        }
+
+        @media (max-width: 450px) {
+            .login-container {
+                width: 90%;
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+
+        <div class="logo">📚</div>
+
+        <h1>Library Management</h1>
+
+        <p class="subtitle">
+            Sign in to access your library account
+        </p>
+
+        <form action="#" method="POST">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <div class="remember">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Remember me</label>
+            </div>
+
+            <button type="submit" class="login-btn">
+                Login
+            </button>
+
+        </form>
+
+        <div class="forgot-password">
+            <a href="#">Forgot Password?</a>
+        </div>
+
+        <div class="footer">
+            © 2026 Library Management System
+        </div>
+
+    </div>
+
+</body>
+</html>
